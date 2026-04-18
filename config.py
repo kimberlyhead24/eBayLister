@@ -1,14 +1,16 @@
-# eBay config (to be filled later)
-EBAY_APP_ID = "YOUR_EBAY_APP_ID_PLACEHOLDER"
-EBAY_CERT_ID = "YOUR_EBAY_CERT_ID_PLACEHOLDER"
-EBAY_DEV_ID = "YOUR_EBAY_DEV_ID_PLACEHOLDER"
-EBAY_SANDBOX_AUTH_URL = "https://api.sandbox.ebay.com/identity/v1/oauth2/token"
-EBAY_SANDBOX_BASE_URL = "https://api.sandbox.ebay.com"
+from dotenv import load_dotenv
+import os
 
-# Your later real token placeholder (for now)
-AUTH_EBAY = "your_auth_ebay_token_placeholder"
+load_dotenv()
 
-# Azure Storage
-AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=youraccount;AccountKey=yourkey;EndpointSuffix=core.windows.net"
-CONTAINER_NAME_PHOTOS = "product-photos"
-CONTAINER_NAME_CLEAN = "cleaned-photos"
+AUTH_EBAY =os.getenv("AUTH_EBAY", "your_auth_ebay_here")
+KEY_EBAY = os.getenv("KEY_EBAY", "your_key_ebay_here")
+EBAY_APP_ID = os.getenv("EBAY_APP_ID", "your_ebay_app_id_here")
+AZURE_STORAGE_CONNECTION_STRING = os.getenv(
+    "AZURE_STORAGE_CONNECTION_STRING",
+    "your_azure_storage_here"
+)
+
+APP_ENV = os.getenv("APP_ENV", "development")
+APP_HOST = os.getenv("APP_HOST", "127.0.0.1")
+APP_PORT = int(os.getenv("APP_PORT", "8000"))

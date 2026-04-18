@@ -1,8 +1,8 @@
  
- - [ ] Set up Obsidian vault 📅 2026-04-13 
- - [ ] Connect Vault to Github 📅 2026-04-13 
- - [ ] Install Tasks Plugin 📅 2026-04-13 
- - [ ] Create Project Folder Structure 📅 2026-04-13
- - [ ] Write MVP requirements 📅 2026-04-14 
+ - [x] Set up Obsidian vault 📅 2026-04-13 ✅ 2026-04-13
+ - [x] Connect Vault to Github 📅 2026-04-13 ✅ 2026-04-13
+ - [x] Install Tasks Plugin 📅 2026-04-13 ✅ 2026-04-13
+ - [x] Create Project Folder Structure 📅 2026-04-13 ✅ 2026-04-13
+ - [x] Write MVP requirements 📅 2026-04-14 ✅ 2026-04-13
  - [ ] 
   

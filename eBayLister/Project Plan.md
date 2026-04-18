@@ -16,14 +16,14 @@
     - Mobile app wrappers.
     - Platforms that are not eBay
 **Agile Backlog**
-- Feature 1: Upload product photo and store it.
+- 1. Receive photo and basic user context.
     
-- Feature 2: Generate clean background‑removed image.
+2. Classify item type, brand, and probable category from image.
     
-- Feature 3: Generate listing draft (title, condition, category, price range).
+3. Query current market sources for active listings and price evidence.
     
-- Feature 4: Show drafts in a list and edit them.
+4. Retrieve internal workflow rules, eBay-specific listing guidance, and pricing rules from your knowledge base.
     
-- Feature 5: Add approval state (draft → approved → published).
+5. Generate title, description, condition guidance, shipping suggestion, and pricing recommendations.
     
-- Feature 6: Call eBay Inventory API (sandbox) when approved.
+6. Send approved result into eBay API workflow.
