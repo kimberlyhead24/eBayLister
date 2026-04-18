@@ -9,12 +9,12 @@
 - [ ] Record why the app no longer focuses on image cleanup and instead focuses on classification, pricing, and workflow automation.
 
 ## MVP Foundation
-- [ ] Define MVP definition and Agile backlog.
-- [ ] Confirm seller workflow: photo → classify → draft → review → publish.
-- [ ] Create basic project structure and delivery plan.
-- [ ] Set up draft storage and model using JSON.
+- [x] Define MVP definition and Agile backlog. ✅ 2026-04-17
+- [x] Confirm seller workflow: photo → classify → draft → review → publish. ✅ 2026-04-17
+- [x] Create basic project structure and delivery plan. ✅ 2026-04-17
+- [x] Set up draft storage and model using JSON. ✅ 2026-04-18
 - [ ] Implement basic UI for photo upload and draft review.
-- [ ] Add listing status flow: draft, needs review, approved, published, failed.
+- [x] Add listing status flow: draft, needs review, approved, published, failed. ✅ 2026-04-18
 - [ ] Add seller notes field and business-review fields to the draft model.
 - [ ] Add audit history fields for created by, reviewed by, and approved by.
 

@@ -1,9 +1,10 @@
 - [x] Workflow: Google Lens item, find similar post | copy AI description -> hit make similar listing | start new listing -> Write Title -> Paste Description | write "Condition: <write any details about item including scratches or damage> | Write Disclaimers | Write note about selling policies | Fill in UPC in sequential order "0045" under item specifics | Take Photos in lightbox | Change store type to collectibles or one of the options the product is | Look up what other sellers currently have it on sale for and look at sale data should beat the other postings slightly but not be too low | If high value item set up an auction, if there is more than one set up with 2+ items total unless auction unable to do more than one item when auction, Allow offers, double check shipping size and weight is correct, keep USPS | if item is bigger change to FedEx, List, Share Facebook, Share with any other product owner ✅ 2026-04-14
-- [ ] - [ ] Create Python virtual environment 🛫 2026-04-15 
-- [ ] Install FastAPI, uvicorn, and python-dotenv 🛫 2026-04-15 
-- [ ] Create .env.example with placeholder config variables 🛫 2026-04-15 
-- [ ] Update config.py to load environment variables 🛫 2026-04-15 
-- [ ] Create main.py with first FastAPI route 🛫 2026-04-15 
-- [ ] Run app locally with uvicorn 🛫 2026-04-15 
-- [ ] Confirm backend works in browser 🛫 2026-04-15 
-- [ ] Commit and push FastAPI foundation🛫 2026-04-15 
+- [x] - [ ] Create Python virtual environment 🛫 2026-04-15 ✅ 2026-04-17
+- [x ] Install FastAPI, uvicorn, and python-dotenv 🛫 2026-04-15 
+- [x ] Create .env.example with placeholder config variables 🛫 2026-04-15 
+- [ x] Update config.py to load environment variables 🛫 2026-04-15 
+- [ x] Create main.py with first FastAPI route 🛫 2026-04-15 
+- [x ] Run app locally with uvicorn 🛫 2026-04-15 
+- [x ] Confirm backend works in browser 🛫 2026-04-15 
+- [ x] Commit and push FastAPI foundation🛫 2026-04-15  
+- 
