@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import List
+from typing import List, Dict, Any
 
 class ListingStatus(Enum):
     DRAFT = "draft"
@@ -17,3 +17,6 @@ class ListingDraft:
     created_at: datetime
     status: ListingStatus
     notes: List[str]
+    debug_notes: List[str] 
+    classification: Dict[str, Any]
+    

@@ -17,6 +17,13 @@
 - [x] Add listing status flow: draft, needs review, approved, published, failed. ✅ 2026-04-18
 - [ ] Add seller notes field and business-review fields to the draft model.
 - [ ] Add audit history fields for created by, reviewed by, and approved by.
+- [x] - [ ] Add debug_notes field to ListingDraft ✅ 2026-04-18
+- [x] Add classification field to ListingDraft ✅ 2026-04-18
+- [x] Create classify_item() stub in app/ai/recognition.py ✅ 2026-04-18
+- [x] Call classify_item() inside /upload-photo ✅ 2026-04-18
+- [x] Return classification data in upload response ✅ 2026-04-18
+- [x] Return debug notes and classification in /drafts ✅ 2026-04-18
+- [x] Test upload-photo and drafts endpoints after classification stub ✅ 2026-04-18
 
 ## Item Classification and Recognition
 - [ ] Research and choose product classification approach for listing photos.
