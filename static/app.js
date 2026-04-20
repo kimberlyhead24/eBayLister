@@ -1,5 +1,5 @@
 // ============================================================
-// UPLOAD SCREEN - Photo preview and drag/drop
+// UPLOAD SCREEN - Accumulated file list
 // ============================================================
 
 const fileInput = document.getElementById("file-input");
@@ -10,46 +10,87 @@ const dropZone = document.getElementById("drop-zone");
 const generateBtn = document.getElementById("generate-draft-btn");
 const uploadError = document.getElementById("upload-error");
 
+// Maintain our own file list so multiple selections accumulate
+let selectedFiles = [];
+
 if (fileInput && previewGrid) {
   fileInput.addEventListener("change", () => {
-    renderPreviews(Array.from(fileInput.files));
+    const newFiles = Array.from(fileInput.files);
+    newFiles.forEach((newFile) => {
+      // Avoid duplicate filenames
+      const alreadyAdded = selectedFiles.some(
+        (f) => f.name === newFile.name && f.size === newFile.size
+      );
+      if (!alreadyAdded) {
+        selectedFiles.push(newFile);
+      }
+    });
+    renderPreviews();
   });
 }
 
-function renderPreviews(files) {
+function renderPreviews() {
+  if (!previewGrid) return;
   previewGrid.innerHTML = "";
 
-  files.forEach((file, index) => {
+  selectedFiles.forEach((file, index) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const card = document.createElement("div");
       card.className =
         "relative group bg-slate-100 rounded-lg border aspect-square overflow-hidden";
+      card.dataset.index = index;
       card.innerHTML = `
-        <img src="${e.target.result}" class="object-cover w-full h-full" />
+        <img src="${e.target.result}" class="object-cover w-full h-full" alt="${file.name}" />
         <div class="absolute top-1 left-1 px-1 rounded text-white text-[10px] font-bold
           ${index === 0 ? "bg-blue-600" : "bg-black/50"}">
           ${index === 0 ? "Main" : index + 1}
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 bg-black/40 text-white text-[9px]
+          px-1 py-0.5 truncate opacity-0 group-hover:opacity-100 transition-opacity">
+          ${file.name}
         </div>
         <button
           class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5
             flex items-center justify-center text-xs opacity-0 group-hover:opacity-100
             transition-opacity"
-          onclick="this.closest('.relative').remove(); updateCount();"
+          data-remove="${index}"
         >&times;</button>
       `;
+
+      // Remove button handler
+      card.querySelector("button[data-remove]").addEventListener("click", () => {
+        selectedFiles.splice(index, 1);
+        renderPreviews();
+      });
+
       previewGrid.appendChild(card);
       updateCount();
     };
     reader.readAsDataURL(file);
   });
+
+  updateCount();
 }
 
 function updateCount() {
-  const total = previewGrid.querySelectorAll(".relative").length;
   if (photoCount && countNumber) {
-    countNumber.textContent = total;
-    photoCount.classList.toggle("hidden", total === 0);
+    countNumber.textContent = selectedFiles.length;
+    photoCount.classList.toggle("hidden", selectedFiles.length === 0);
+  }
+}
+
+function showError(message) {
+  if (uploadError) {
+    uploadError.textContent = message;
+    uploadError.classList.remove("hidden");
+  }
+}
+
+function clearError() {
+  if (uploadError) {
+    uploadError.textContent = "";
+    uploadError.classList.add("hidden");
   }
 }
 
@@ -71,10 +112,16 @@ if (dropZone) {
 
   dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
-    const files = Array.from(e.dataTransfer.files).filter((f) =>
+    const dropped = Array.from(e.dataTransfer.files).filter((f) =>
       f.type.startsWith("image/")
     );
-    renderPreviews(files);
+    dropped.forEach((newFile) => {
+      const alreadyAdded = selectedFiles.some(
+        (f) => f.name === newFile.name && f.size === newFile.size
+      );
+      if (!alreadyAdded) selectedFiles.push(newFile);
+    });
+    renderPreviews();
   });
 }
 
@@ -83,8 +130,7 @@ if (generateBtn) {
   generateBtn.addEventListener("click", async () => {
     clearError();
 
-    const files = fileInput ? Array.from(fileInput.files) : [];
-    if (files.length === 0) {
+    if (selectedFiles.length === 0) {
       showError("Please upload at least one photo before generating a draft.");
       return;
     }
@@ -93,7 +139,7 @@ if (generateBtn) {
     generateBtn.disabled = true;
 
     const formData = new FormData();
-    files.forEach((file) => formData.append("files", file));
+    selectedFiles.forEach((file) => formData.append("files", file));
 
     const sellerNotes = document.getElementById("seller-notes");
     if (sellerNotes) formData.append("seller_notes", sellerNotes.value);
@@ -128,7 +174,7 @@ if (generateBtn) {
       if (!response.ok) {
         const err = await response.json();
         showError("Error: " + (err.detail || "Something went wrong."));
-        generateBtn.textContent = "Generate Draft with AI →";
+        generateBtn.textContent = "Generate Draft with AI \u2192";
         generateBtn.disabled = false;
         return;
       }
@@ -137,7 +183,7 @@ if (generateBtn) {
       window.location.href = `/review/${data.draft_id}`;
     } catch (err) {
       showError("Network error. Please check the server is running.");
-      generateBtn.textContent = "Generate Draft with AI →";
+      generateBtn.textContent = "Generate Draft with AI \u2192";
       generateBtn.disabled = false;
     }
   });
@@ -160,7 +206,6 @@ if (titleInput && titleCharCount) {
   updateCharCount();
 }
 
-// Listing type toggle — hide quantity if auction
 const listingTypeSelect = document.getElementById("listing-type");
 const quantityField = document.getElementById("listing-quantity");
 
@@ -177,11 +222,10 @@ if (listingTypeSelect && quantityField) {
   });
 }
 
-// Save draft button
 const saveDraftBtn = document.getElementById("save-draft-btn");
 if (saveDraftBtn) {
   saveDraftBtn.addEventListener("click", () => {
-    saveDraftBtn.textContent = "Saved";
+    saveDraftBtn.textContent = "Saved \u2713";
     saveDraftBtn.classList.add("text-green-600");
     setTimeout(() => {
       saveDraftBtn.textContent = "Save Draft";
@@ -190,27 +234,25 @@ if (saveDraftBtn) {
   });
 }
 
-// Approve button
 const approveBtn = document.getElementById("approve-btn");
 if (approveBtn) {
   approveBtn.addEventListener("click", () => {
-    const badge = document.querySelector(".bg-amber-100");
+    const badge = document.querySelector("[class*='bg-amber-100']");
     if (badge) {
       badge.textContent = "approved";
       badge.className =
         "px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full uppercase";
     }
-    approveBtn.textContent = "Approved";
+    approveBtn.textContent = "Approved \u2713";
     approveBtn.disabled = true;
     approveBtn.classList.replace("bg-blue-600", "bg-green-600");
   });
 }
 
-// Reject button
 const rejectBtn = document.getElementById("reject-btn");
 if (rejectBtn) {
   rejectBtn.addEventListener("click", () => {
-    const badge = document.querySelector(".bg-amber-100");
+    const badge = document.querySelector("[class*='bg-amber-100']");
     if (badge) {
       badge.textContent = "rejected";
       badge.className =
@@ -219,14 +261,13 @@ if (rejectBtn) {
   });
 }
 
-// Publish button
 const publishBtn = document.getElementById("publish-btn");
 if (publishBtn) {
   publishBtn.addEventListener("click", () => {
     publishBtn.textContent = "Publishing...";
     publishBtn.disabled = true;
     setTimeout(() => {
-      publishBtn.textContent = "Published to eBay ✓";
+      publishBtn.textContent = "Published to eBay \u2713";
       publishBtn.classList.replace("bg-green-600", "bg-slate-400");
     }, 1500);
   });

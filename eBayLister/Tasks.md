@@ -41,7 +41,15 @@
 - [x] Add confidence-scoring rules for weak or missing comps ✅ 2026-04-18
 - [x] Update market_data stub to track source_used and match_strategy ✅ 2026-04-18
 - [x] Save architecture image inside Obsidian vault and embed it in project notes ✅ 2026-04-18
-
+- [x] Install pytest, pytest-asyncio, and httpx ✅ 2026-04-19
+- [x] Create tests/ folder with __init__.py ✅ 2026-04-19
+- [x] Write test_models.py ✅ 2026-04-19
+- [x] Write test_database.py ✅ 2026-04-19
+- [x] Write test_classification.py ✅ 2026-04-19
+- [x] Write test_market_data.py ✅ 2026-04-19
+- [x] Write test_routes.py ✅ 2026-04-19
+- [x] Run pytest tests/ -v and confirm all tests pass ✅ 2026-04-19
+- [x] Commit test suite to GitHub ✅ 2026-04-19
 ## Item Classification and Recognition
 - [ ] Research and choose product classification approach for listing photos.
 - [ ] Define structured classification output: item name, brand, category, model, condition clues.
