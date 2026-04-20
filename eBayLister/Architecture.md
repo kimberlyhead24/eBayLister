@@ -10,3 +10,4 @@ Stack - Obsidian, Azure, Flask, Python, Github
 5. Generate title, description, condition guidance, shipping suggestion, and pricing recommendations.
     
 6. Send approved result into eBay API workflow.
+![[eBayListerAppArchitecture.png|697]]

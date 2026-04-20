@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review Draft | eBay Lister AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans text-slate-800">
+
+  <!-- TOP NAV -->
+  <nav class="bg-white border-b px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-10">
+    <div class="flex items-center gap-3">
+      <span class="text-blue-600 font-black text-lg tracking-tight">eBay Lister AI</span>
+      <span class="text-slate-300">|</span>
+      <span class="text-sm text-slate-500">Draft Review</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/ui" class="text-sm text-slate-500 hover:text-blue-600">&#8592; New Listing</a>
+      <a href="/drafts-ui" class="text-sm text-blue-600 hover:underline font-medium">All Drafts</a>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 py-6">
+
+    <!-- PAGE HEADER -->
+    <div class="flex items-start justify-between mb-6 flex-wrap gap-3">
+      <div>
+        <div class="flex items-center gap-3 mb-1">
+          <h1 class="text-xl font-bold text-slate-800">Draft Review</h1>
+          <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full uppercase">
+            {{ draft.status }}
+          </span>
+        </div>
+        <p class="text-xs text-slate-400">
+          Draft ID: {{ draft.id }} &bull; Created by: {{ draft.created_by }}
+        </p>
+      </div>
+
+      <!-- STEP INDICATOR -->
+      <div class="flex items-center gap-2 text-xs font-semibold">
+        <div class="flex items-center gap-1 text-slate-400">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">1</span>
+          <span>Upload</span>
+        </div>
+        <div class="h-px w-8 bg-slate-300"></div>
+        <div class="flex items-center gap-1 text-blue-600">
+          <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">2</span>
+          <span>Review Draft</span>
+        </div>
+        <div class="h-px w-8 bg-slate-300"></div>
+        <div class="flex items-center gap-1 text-slate-400">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">3</span>
+          <span>Publish</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col xl:flex-row gap-6">
+
+      <!-- LEFT: MAIN CONTENT -->
+      <div class="flex-1 space-y-5">
+
+        <!-- IMAGE GALLERY -->
+        <div class="bg-white border rounded-lg shadow-sm p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xs font-bold uppercase text-slate-500">Product Photos</h2>
+            <span class="text-xs text-slate-400">Click thumbnail to set as main image</span>
+          </div>
+          <div class="grid grid-cols-4 gap-3">
+            <!-- Main large image -->
+            <div class="col-span-3 aspect-video bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden border">
+              <img
+                id="main-image"
+                src=""
+                alt="Main product photo"
+                class="object-contain w-full h-full hidden"
+              />
+              <span id="main-image-placeholder" class="text-slate-400 text-sm">
+                No photo uploaded yet
+              </span>
+            </div>
+            <!-- Thumbnail strip -->
+            <div class="flex flex-col gap-2" id="thumbnail-strip">
+              <div class="aspect-square bg-slate-100 rounded border flex items-center justify-center text-slate-300 text-xs">2</div>
+              <div class="aspect-square bg-slate-100 rounded border flex items-center justify-center text-slate-300 text-xs">3</div>
+              <div class="aspect-square bg-slate-100 rounded border flex items-center justify-center text-slate-300 text-xs">4</div>
+              <div class="aspect-square bg-slate-100 rounded border flex items-center justify-center text-slate-300 text-xs">+</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">
+            First photo is the primary eBay listing image. eBay requires at least one image URL before publish.
+          </p>
+        </div>
+
+        <!-- AI CLASSIFICATION SUMMARY -->
+        <div class="bg-blue-50 border border-blue-100 rounded-lg p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xs font-bold uppercase text-blue-800">AI Classification Summary</h2>
+            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-mono">
+              Confidence: {{ draft.classification.confidence }}
+            </span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-blue-900">
+            <div class="bg-white rounded p-3 border border-blue-100">
+              <p class="text-xs text-blue-400 font-bold uppercase mb-1">Item</p>
+              <p class="font-medium">{{ draft.classification.item_name }}</p>
+            </div>
+            <div class="bg-white rounded p-3 border border-blue-100">
+              <p class="text-xs text-blue-400 font-bold uppercase mb-1">Brand</p>
+              <p class="font-medium">{{ draft.classification.brand }}</p>
+            </div>
+            <div class="bg-white rounded p-3 border border-blue-100">
+              <p class="text-xs text-blue-400 font-bold uppercase mb-1">Category</p>
+              <p class="font-medium">{{ draft.classification.category }}</p>
+            </div>
+            <div class="bg-white rounded p-3 border border-blue-100">
+              <p class="text-xs text-blue-400 font-bold uppercase mb-1">Condition Hint</p>
+              <p class="font-medium">{{ draft.classification.condition_hint }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MARKET PRICING SUMMARY -->
+        <div class="bg-green-50 border border-green-100 rounded-lg p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xs font-bold uppercase text-green-800">Market Pricing Summary</h2>
+            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-mono">
+              Source: {{ draft.market_data.source_used }}
+            </span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-green-900">
+            <div class="bg-white rounded p-3 border border-green-100">
+              <p class="text-xs text-green-400 font-bold uppercase mb-1">Price Low</p>
+              <p class="font-medium">
+                {% if draft.market_data.price_low %}
+                  ${{ draft.market_data.price_low }}
+                {% else %}
+                  —
+                {% endif %}
+              </p>
+            </div>
+            <div class="bg-white rounded p-3 border border-green-100">
+              <p class="text-xs text-green-400 font-bold uppercase mb-1">Median Price</p>
+              <p class="font-bold text-green-700 text-base">
+                {% if draft.market_data.median_price %}
+                  ${{ draft.market_data.median_price }}
+                {% else %}
+                  —
+                {% endif %}
+              </p>
+            </div>
+            <div class="bg-white rounded p-3 border border-green-100">
+              <p class="text-xs text-green-400 font-bold uppercase mb-1">Price High</p>
+              <p class="font-medium">
+                {% if draft.market_data.price_high %}
+                  ${{ draft.market_data.price_high }}
+                {% else %}
+                  —
+                {% endif %}
+              </p>
+            </div>
+            <div class="bg-white rounded p-3 border border-green-100">
+              <p class="text-xs text-green-400 font-bold uppercase mb-1">Match Strategy</p>
+              <p class="font-medium">{{ draft.market_data.match_strategy }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- LISTING DETAILS FORM -->
+        <div class="bg-white border rounded-lg shadow-sm p-5 space-y-5">
+          <h2 class="text-xs font-bold uppercase text-slate-500 border-b pb-2">Listing Details</h2>
+
+          <!-- Title -->
+          <div>
+            abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="listing-title">
+              Listing Title
+              <span class="text-slate-300 font-normal normal-case ml-1">eBay max 80 characters</span>
+            </label>
+            <input
+              id="listing-title"
+              type="text"
+              maxlength="80"
+              class="w-full p-2 border rounded text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500"
+              value="{{ draft.title }}"
+            />
+            <p class="text-xs text-slate-400 mt-1" id="title-char-count">0 / 80 characters</p>
+          </div>
+
+          <!-- Description -->
+          <div>
+            abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="listing-description">
+              Description
+            </label>
+            <textarea
+              id="listing-description"
+              rows="7"
+              class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              placeholder="AI-generated description will appear here after draft creation..."
+            ></textarea>
+          </div>
+
+          <!-- Condition and Price -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="listing-condition">
+                Condition
+              </label>
+              <select
+                id="listing-condition"
+                class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option>New</option>
+                <option>New - Open Box</option>
+                <option selected>Used - Excellent</option>
+                <option>Used - Good</option>
+                <option>Used - Fair</option>
+                <option>For Parts or Not Working</option>
+              </select>
+            </div>
+            <div>
+              abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="listing-price">
+                List Price ($)
+                <span class="text-green-600 font-normal normal-case ml-1">
+                  {% if draft.market_data.median_price %}
+                    Suggested: ${{ draft.market_data.median_price }}
+                  {% endif %}
+                </span>
+              </label>
+              <input
+                id="listing-price"
+                type="number"
+                step="0.01"
+                min="0"
+                class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          <!-- Listing Type and Quantity -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="listing-type">
+                Listing Type
+              </label>
+              <select
+                id="listing-type"
+                class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="fixed">Fixed Price</option>
+                <option value="auction">Auction</option>
+              </select>
+            </div>
+            <div>
+              abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="listing-quantity">
+                Quantity
+              </label>
+              <input
+                id="listing-quantity"
+                type="number"
+                min="1"
+                value="1"
+                class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          <!-- Shipping -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="shipping-carrier">
+                Shipping Carrier
+              </label>
+              <select
+                id="shipping-carrier"
+                class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="usps" selected>USPS (default)</option>
+                <option value="fedex">FedEx (larger items)</option>
+                <option value="ups">UPS</option>
+              </select>
+            </div>
+            <div>
+              abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="allow-offers">
+                Allow Offers
+              </label>
+              <select
+                id="allow-offers"
+                class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="yes" selected>Yes (recommended)</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Item Specifics -->
+          <div>
+            abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="item-specifics">
+              Item Specifics / Aspects
+              <span class="text-slate-300 font-normal normal-case ml-1">Brand, Model, Color, Material, UPC, etc.</span>
+            </label>
+            <textarea
+              id="item-specifics"
+              rows="4"
+              class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              placeholder="Brand: Apple&#10;Model: MacBook Air M1&#10;Color: Space Gray&#10;UPC: 0045..."
+            ></textarea>
+          </div>
+
+          <!-- Disclaimers -->
+          <div>
+            abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="listing-disclaimers">
+              Disclaimers
+            </label>
+            <textarea
+              id="listing-disclaimers"
+              rows="3"
+              class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              placeholder="AI-generated disclaimers will appear here..."
+            ></textarea>
+          </div>
+
+          <!-- Selling Policy Note -->
+          <div>
+            abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="selling-policy">
+              Selling Policy Note
+            </label>
+            <textarea
+              id="selling-policy"
+              rows="2"
+              class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              placeholder="Standard selling policy note..."
+            ></textarea>
+          </div>
+
+          <!-- Seller Notes readonly display -->
+          <div>
+            abel class="block text-xs font-bold uppercase text-slate-500 mb-1">
+              Original Seller Notes
+            </label>
+            <div class="w-full p-2 border rounded text-sm bg-slate-50 text-slate-600 min-h-[60px]">
+              {{ draft.seller_notes if draft.seller_notes else "No seller notes provided." }}
+            </div>
+          </div>
+
+        </div>
+        <!-- END LISTING DETAILS FORM -->
+
+      </div>
+      <!-- END LEFT MAIN CONTENT -->
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="w-full xl:w-80 space-y-4 xl:sticky xl:top-20 xl:self-start">
+
+        <!-- PRICING QUICK REFERENCE -->
+        <div class="bg-white border rounded-lg shadow-sm p-4">
+          <h3 class="text-xs font-bold uppercase text-slate-500 mb-3">Pricing Quick Reference</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-center py-1 border-b">
+              <span class="text-slate-500">Quick Sale</span>
+              <span class="font-bold text-orange-600">
+                {% if draft.market_data.price_low %}
+                  ${{ draft.market_data.price_low }}
+                {% else %}
+                  —
+                {% endif %}
+              </span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b">
+              <span class="text-slate-500">Market Price</span>
+              <span class="font-bold text-green-600">
+                {% if draft.market_data.median_price %}
+                  ${{ draft.market_data.median_price }}
+                {% else %}
+                  —
+                {% endif %}
+              </span>
+            </div>
+            <div class="flex justify-between items-center py-1">
+              <span class="text-slate-500">Premium</span>
+              <span class="font-bold text-blue-600">
+                {% if draft.market_data.price_high %}
+                  ${{ draft.market_data.price_high }}
+                {% else %}
+                  —
+                {% endif %}
+              </span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mt-3">
+            Source: {{ draft.market_data.source_used }} &bull;
+            Strategy: {{ draft.market_data.match_strategy }}
+          </p>
+        </div>
+
+        <!-- BUSINESS REVIEW -->
+        <div class="bg-white border rounded-lg shadow-sm p-4">
+          <h3 class="text-xs font-bold uppercase text-slate-500 mb-3">Business Review</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-slate-500">Review Status</span>
+              <span class="font-bold uppercase text-amber-600">
+                {{ draft.business_review_status }}
+              </span>
+            </div>
+            <div>
+              abel class="block text-xs font-bold uppercase text-slate-500 mb-1" for="review-notes">
+                Reviewer Notes
+              </label>
+              <textarea
+                id="review-notes"
+                rows="4"
+                class="w-full p-2 border rounded text-xs outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                placeholder="Add approval notes, corrections, or rejection reason..."
+              >{{ draft.business_review_notes }}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- AUDIT TRAIL -->
+        <div class="bg-slate-50 border rounded-lg p-4 text-xs space-y-2 text-slate-600">
+          <h3 class="text-xs font-bold uppercase text-slate-500 mb-2">Audit Trail</h3>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Created By</span>
+            <span class="font-medium">{{ draft.created_by }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Reviewed By</span>
+            <span class="font-medium">
+              {% if draft.reviewed_by %}{{ draft.reviewed_by }}{% else %}—{% endif %}
+            </span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Approved By</span>
+            <span class="font-medium">
+              {% if draft.approved_by %}{{ draft.approved_by }}{% else %}—{% endif %}
+            </span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Reviewed At</span>
+            <span class="font-medium">
+              {% if draft.reviewed_at %}{{ draft.reviewed_at }}{% else %}—{% endif %}
+            </span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Approved At</span>
+            <span class="font-medium">
+              {% if draft.approved_at %}{{ draft.approved_at }}{% else %}—{% endif %}
+            </span>
+          </div>
+        </div>
+
+        <!-- PUBLISH READINESS CHECK -->
+        <div class="bg-white border rounded-lg shadow-sm p-4">
+          <h3 class="text-xs font-bold uppercase text-slate-500 mb-3">Publish Readiness</h3>
+          <ul class="space-y-2 text-xs" id="readiness-list">
+            >
+              <span class="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">&#10003;</span>
+              <span class="text-slate-500">Photos uploaded</span>
+            </li>
+            >
+              <span class="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">&#10003;</span>
+              <span class="text-slate-500">Title complete</span>
+            </li>
+            >
+              <span class="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">&#10003;</span>
+              <span class="text-slate-500">Price set</span>
+            </li>
+            >
+              <span class="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">&#10003;</span>
+              <span class="text-slate-500">Condition selected</span>
+            </li>
+            >
+              <span class="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">&#10003;</span>
+              <span class="text-slate-500">Business approved</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="bg-white border rounded-lg shadow-sm p-4 space-y-2">
+          <h3 class="text-xs font-bold uppercase text-slate-500 mb-3">Actions</h3>
+
+          <button
+            id="save-draft-btn"
+            class="w-full py-2 border border-slate-300 text-slate-700 rounded font-medium text-sm hover:bg-slate-50 transition-colors"
+          >
+            Save Draft
+          </button>
+
+          <button
+            id="approve-btn"
+            class="w-full py-2 bg-blue-600 text-white rounded font-bold text-sm hover:bg-blue-700 transition-colors"
+          >
+            Approve Draft
+          </button>
+
+          <button
+            id="reject-btn"
+            class="w-full py-2 border border-red-300 text-red-600 rounded font-medium text-sm hover:bg-red-50 transition-colors"
+          >
+            Reject Draft
+          </button>
+
+          <div class="border-t pt-2 mt-1">
+            <button
+              id="publish-btn"
+              class="w-full py-3 bg-green-600 text-white rounded-lg font-bold text-sm hover:bg-green-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Publish to eBay &#8594;
+            </button>
+          </div>
+        </div>
+
+        <!-- SHARE AFTER PUBLISH -->
+        <div class="bg-white border rounded-lg shadow-sm p-4 space-y-2">
+          <h3 class="text-xs font-bold uppercase text-slate-500 mb-3">Share After Publish</h3>
+          <button
+            id="share-facebook-btn"
+            class="w-full py-2 bg-blue-800 text-white rounded font-medium text-sm hover:bg-blue-900 transition-colors"
+          >
+            Share to Facebook
+          </button>
+          <button
+            id="share-other-btn"
+            class="w-full py-2 border border-slate-300 text-slate-700 rounded font-medium text-sm hover:bg-slate-50 transition-colors"
+          >
+            Share with Product Owner
+          </button>
+        </div>
+
+      </aside>
+      <!-- END RIGHT SIDEBAR -->
+
+    </div>
+    <!-- END FLEX ROW -->
+
+  </div>
+  <!-- END PAGE CONTAINER -->
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Listing | eBay Lister AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans text-slate-800">
+
+  <!-- TOP NAV -->
+  <nav class="bg-white border-b px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-10">
+    <div class="flex items-center gap-3">
+      <span class="text-blue-600 font-black text-lg tracking-tight">eBay Lister AI</span>
+      <span class="text-slate-300">|</span>
+      <span class="text-sm text-slate-500">New Listing</span>
+    </div>
+    <a href="/drafts-ui" class="text-sm text-blue-600 hover:underline font-medium">
+      View All Drafts
+    </a>
+  </nav>
+
+  <div class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- PAGE HEADER -->
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Create New Listing</h1>
+      <p class="text-sm text-slate-500 mt-1">Upload product photos and notes. The AI will classify the item and generate a draft listing for review.</p>
+    </div>
+
+    <!-- STEP INDICATOR -->
+    <div class="flex items-center gap-2 text-xs font-semibold">
+      <div class="flex items-center gap-1 text-blue-600">
+        <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">1</span>
+        <span>Upload Photos</span>
+      </div>
+      <div class="h-px w-8 bg-slate-300"></div>
+      <div class="flex items-center gap-1 text-slate-400">
+        <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">2</span>
+        <span>Review Draft</span>
+      </div>
+      <div class="h-px w-8 bg-slate-300"></div>
+      <div class="flex items-center gap-1 text-slate-400">
+        <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">3</span>
+        <span>Publish</span>
+      </div>
+    </div>
+
+    <!-- DROP ZONE -->
+    <div class="bg-white border rounded-lg shadow-sm p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">Product Photos</h2>
+        <span class="text-xs text-slate-400">First photo will be the main listing image</span>
+      </div>
+
+      <div
+        id="drop-zone"
+        class="border-2 border-dashed border-slate-300 rounded-lg p-10 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all"
+        onclick="document.getElementById('file-input').click()"
+      >
+        <div class="space-y-2">
+          <div class="text-3xl text-slate-300">&#128247;</div>
+          <p class="text-slate-600 font-medium">Drag photos here or <span class="text-blue-600 underline">click to browse</span></p>
+          <p class="text-xs text-slate-400">JPG or PNG &bull; Up to 10MB each &bull; Upload as many as needed</p>
+        </div>
+        <input type="file" multiple accept="image/jpeg,image/png" class="hidden" id="file-input" />
+      </div>
+
+      <!-- PHOTO PREVIEW GRID -->
+      <div id="preview-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+
+      <!-- PHOTO COUNT -->
+      <p id="photo-count" class="text-xs text-slate-400 hidden">
+        <span id="count-number">0</span> photo(s) selected
+      </p>
+    </div>
+
+    <!-- ITEM INFO -->
+    <div class="bg-white border rounded-lg shadow-sm p-6 space-y-4">
+      <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">Item Information</h2>
+
+      <div>
+        abel class="block text-xs font-bold text-slate-500 uppercase mb-1" for="item-hint">
+          Item Name or Hint <span class="text-slate-300 font-normal">(optional — helps AI classification)</span>
+        </label>
+        <input
+          id="item-hint"
+          type="text"
+          class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="e.g. Vintage Pyrex bowl, Nike Air Max, Canon DSLR..."
+        />
+      </div>
+
+      <div>
+        abel class="block text-xs font-bold text-slate-500 uppercase mb-1" for="seller-notes">
+          Seller Notes
+        </label>
+        <textarea
+          id="seller-notes"
+          rows="4"
+          class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          placeholder="Describe condition issues, what is included, any missing parts, original box, etc..."
+        ></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          abel class="block text-xs font-bold text-slate-500 uppercase mb-1" for="condition-hint">
+            Condition
+          </label>
+          <select
+            id="condition-hint"
+            class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">— Select condition —</option>
+            <option>New</option>
+            <option>New - Open Box</option>
+            <option>Used - Excellent</option>
+            <option>Used - Good</option>
+            <option>Used - Fair</option>
+            <option>For Parts or Not Working</option>
+          </select>
+        </div>
+
+        <div>
+          abel class="block text-xs font-bold text-slate-500 uppercase mb-1" for="msrp-hint">
+            MSRP / Original Price ($) <span class="text-slate-300 font-normal">(optional)</span>
+          </label>
+          <input
+            id="msrp-hint"
+            type="number"
+            step="0.01"
+            class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="0.00"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTING OPTIONS -->
+    <div class="bg-white border rounded-lg shadow-sm p-6 space-y-4">
+      <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">Listing Options</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          abel class="block text-xs font-bold text-slate-500 uppercase mb-1">
+            Listing Type
+          </label>
+          <select
+            id="listing-type"
+            class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="fixed">Fixed Price</option>
+            <option value="auction">Auction</option>
+          </select>
+        </div>
+
+        <div>
+          abel class="block text-xs font-bold text-slate-500 uppercase mb-1">
+            Quantity
+          </label>
+          <input
+            id="quantity"
+            type="number"
+            min="1"
+            value="1"
+            class="w-full p-2 border rounded text-sm outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          abel class="block text-xs font-bold text-slate-500 uppercase mb-1">
+            Shipping Carrier
+          </label>
+          <select
+            id="shipping-carrier"
+            class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="usps">USPS (default)</option>
+            <option value="fedex">FedEx (larger items)</option>
+            <option value="ups">UPS</option>
+          </select>
+        </div>
+
+        <div>
+          abel class="block text-xs font-bold text-slate-500 uppercase mb-1">
+            Allow Offers
+          </label>
+          <select
+            id="allow-offers"
+            class="w-full p-2 border rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="yes">Yes (recommended)</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ERROR MESSAGE -->
+    <div id="upload-error" class="hidden bg-red-50 border border-red-200 text-red-700 text-sm p-3 rounded"></div>
+
+    <!-- SUBMIT BUTTON -->
+    <button
+      id="generate-draft-btn"
+      class="w-full py-4 bg-slate-900 text-white rounded-lg font-bold text-base hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Generate Draft with AI &#8594;
+    </button>
+
+    <p class="text-xs text-center text-slate-400">
+      The AI will classify the item, search for current market pricing, and generate a draft listing for your review before anything is published.
+    </p>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

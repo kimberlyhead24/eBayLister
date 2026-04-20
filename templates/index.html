@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eBay Lister AI UI</title>
+  /static/styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <h1>Photo Upload</h1>
+      <p class="muted">Upload multiple product photos to create a draft listing.</p>
+
+      <form id="upload-form">
+        abel for="photos" class="label">Product Photos</label>
+        <input id="photos" name="photos" type="file" accept="image/*" multiple />
+
+        <div id="preview-grid" class="preview-grid"></div>
+
+        abel for="seller-notes" class="label">Seller Notes</label>
+        <textarea id="seller-notes" rows="4" placeholder="Add seller notes about condition, flaws, accessories, or shipping concerns"></textarea>
+
+        <button type="button" class="btn-primary">Create Draft</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-header">
+        <h2>Draft Review</h2>
+        <span class="status-badge">{{ draft.status }}</span>
+      </div>
+
+      <div class="review-grid">
+        <div>
+          <h3>AI Summary</h3>
+          <p><strong>Item:</strong> {{ draft.classification.item_name }}</p>
+          <p><strong>Brand:</strong> {{ draft.classification.brand }}</p>
+          <p><strong>Category:</strong> {{ draft.classification.category }}</p>
+          <p><strong>Condition Hint:</strong> {{ draft.classification.condition_hint }}</p>
+          <p><strong>Confidence:</strong> {{ draft.classification.confidence }}</p>
+        </div>
+
+        <div>
+          <h3>Market Data</h3>
+          <p><strong>Source:</strong> {{ draft.market_data.source_used }}</p>
+          <p><strong>Match:</strong> {{ draft.market_data.match_strategy }}</p>
+          <p><strong>Median Price:</strong> {{ draft.market_data.median_price }}</p>
+          <p><strong>Confidence:</strong> {{ draft.market_data.confidence }}</p>
+        </div>
+      </div>
+
+      abel class="label" for="title">Title</label>
+      <input id="title" type="text" value="{{ draft.title }}" />
+
+      abel class="label" for="description">Description</label>
+      <textarea id="description" rows="6" placeholder="AI-generated description will appear here"></textarea>
+
+      abel class="label" for="condition">Condition</label>
+      <input id="condition" type="text" value="{{ draft.classification.condition_hint }}" />
+
+      abel class="label" for="item-specifics">Item Specifics / Aspects</label>
+      <textarea id="item-specifics" rows="4" placeholder="Brand, type, color, material, model, etc."></textarea>
+
+      abel class="label" for="review-notes">Business Review Notes</label>
+      <textarea id="review-notes" rows="4" placeholder="Reviewer comments"></textarea>
+
+      <div class="button-row">
+        <button class="btn-secondary" type="button">Reject</button>
+        <button class="btn-secondary" type="button">Approve</button>
+        <button class="btn-primary" type="button">Publish</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
